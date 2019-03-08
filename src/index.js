@@ -22,8 +22,10 @@ function createStore() {
   let state;
   let listeners = [];
 
+  //get the state
   const getState = () => state;
 
+  //listen to changes
   const subscribe = listener => {
     listeners.push(listener);
 
@@ -33,9 +35,16 @@ function createStore() {
     };
   };
 
+  //update the state
+  const dispatch = action => {
+    state = todos(state, action);
+    listeners.forEach(listener => listener());
+  };
+
   return {
     getState,
-    subscribe
+    subscribe,
+    dispatch
   };
 }
 
