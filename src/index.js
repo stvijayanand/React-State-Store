@@ -1,8 +1,11 @@
-//pure function
-function todos(state, action) {
+//Reducer - pure function
+//setting default value for state as it is undefined at the start
+function todos(state = [], action) {
   if (action.type === "ADD_TODO") {
     return state.concat([action.todo]);
   }
+
+  return state;
 }
 
 //factory function that creates store objects
