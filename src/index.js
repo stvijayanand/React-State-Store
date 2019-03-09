@@ -1,23 +1,17 @@
-//Reducer - pure function
-//setting default value for state as it is undefined at the start
-function todos(state = [], action) {
-  if (action.type === "ADD_TODO") {
-    return state.concat([action.todo]);
-  }
-
-  return state;
-}
+/**************************************************
+Library Code
+**************************************************/
 
 //factory function that creates store objects
-function createStore() {
+function createStore(reducer) {
   /*
-    The store should have 4 parts
-    1. The state
-    2. Get the state
-    3. Listen to changes on the state
-    4. Update the state
-
-    */
+      The store should have 4 parts
+      1. The state
+      2. Get the state
+      3. Listen to changes on the state
+      4. Update the state
+  
+      */
 
   let state;
   let listeners = [];
@@ -37,7 +31,7 @@ function createStore() {
 
   //update the state
   const dispatch = action => {
-    state = todos(state, action);
+    state = reducer(state, action);
     listeners.forEach(listener => listener());
   };
 
@@ -48,6 +42,36 @@ function createStore() {
   };
 }
 
+/**************************************************
+App Code
+**************************************************/
+
+//Reducer - pure function
+//setting default value for state as it is undefined at the start
+function todos(state = [], action) {
+  if (action.type === "ADD_TODO") {
+    return state.concat([action.todo]);
+  }
+
+  return state;
+}
+
+const store = createStore(todos);
+
+store.subscribe(() => {
+  console.log("The current state is: " + store.getState());
+});
+
+store.dispatch({
+  type: "ADD_TODO",
+  todo: {
+    id: 0,
+    name: "learn Redux",
+    complete: false
+  }
+});
+
+//---------------------------------------------------------
 // import React from 'react';
 // import ReactDOM from 'react-dom';
 // import './index.css';
