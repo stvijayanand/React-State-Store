@@ -54,6 +54,9 @@ function todos(state = [], action) {
   } else if (action.type === "REMOVE_TODO") {
     return state.filter(s => s.id !== action.id);
   } else if (action.type === "TOGGLE_TODO") {
+    return state.map(s =>
+      s.id !== action.id ? s : Object.assign({}, s, { complete: !s.complete })
+    );
   } else {
     return state;
   }
