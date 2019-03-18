@@ -46,6 +46,28 @@ function createStore(reducer) {
 App Code
 **************************************************/
 
+//Action creators
+function addTodoAction(todo) {
+  return {
+    type: "ADD_TODO",
+    todo
+  };
+}
+
+function removeTodoAction(id) {
+  return {
+    type: "REMOVE_TODO",
+    id
+  };
+}
+
+function addGoalAction(goal) {
+  return {
+    type: "ADD_GOAL",
+    goal
+  };
+}
+
 //Reducer - pure function
 //setting default value for state as it is undefined at the start
 function todos(state = [], action) {
@@ -74,17 +96,33 @@ function goals(state = [], action) {
   }
 }
 
-const store = createStore(todos);
+//Root reducer
+function app(state = {}, action) {
+  return {
+    todos: todos(state.todos, action),
+    goals: goals(state.goals, action)
+  };
+}
+
+const store = createStore(app);
 
 store.subscribe(() => {
   console.log("The current state is: " + store.getState());
 });
 
-store.dispatch({
-  type: "ADD_TODO",
-  todo: {
+store.dispatch(
+  addTodoAction({
     id: 0,
     name: "learn Redux",
+    complete: false
+  })
+);
+
+store.dispatch({
+  type: "ADD_GOAL",
+  goal: {
+    id: 1000,
+    name: "React dev",
     complete: false
   }
 });
