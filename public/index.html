@@ -124,11 +124,11 @@
         return next(action); //next middleware in line or dispatch
       };
 
-      const logger = store => next => action => {
+      const logger = ({ getState, dispatch }) => next => action => {
         console.group(action.type);
         console.log("Action: " + action);
         result = next(action);
-        console.log("New state: " + store.getState());
+        console.log("New state: " + getState());
         console.groupEnd();
         return result;
       };
@@ -150,7 +150,8 @@
           todos,
           goals
         }),
-        Redux.applyMiddleware(checker, logger, goalAlerter)
+        {}, //initial state
+        Redux.applyMiddleware(checker, logger, goalAlerter) //applyMiddleware as the last enhancer
       );
 
       store.subscribe(() => {
