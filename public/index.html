@@ -217,6 +217,11 @@
         };
         toggleItem = id => {
           this.props.store.dispatch(toggleTodoAction(id));
+
+          API.saveTodoToggle().catch(() => {
+            this.props.store.dispatch(toggleTodoAction(id));
+            alert("An error occured. Please try again.");
+          });
         };
         render() {
           return (
