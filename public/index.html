@@ -88,6 +88,30 @@
         };
       }
 
+      function handleAddGoal(name, callback) {
+        return dispatch => {
+          return API.saveGoal(name)
+            .then(goal => {
+              dispatch(addGoalAction(goal));
+              callback();
+            })
+            .catch(() => {
+              alert("Error occured.");
+            });
+        };
+      }
+
+      function handleRemoveGoal(goal) {
+        return dispatch => {
+          dispatch(removeGoalAction(goal.id));
+
+          return API.deleteGoal().catch(() => {
+            dispatch(addGoalAction(goal));
+            alert("An error occured. Please try again later.");
+          });
+        };
+      }
+
       //Reducer - pure function
       //setting default value for state as it is undefined at the start
       function todos(state = [], action) {
@@ -262,22 +286,12 @@
         addItem = e => {
           e.preventDefault();
 
-          return API.saveGoal(this.input.value)
-            .then(goal => {
-              this.props.store.dispatch(addGoalAction(goal));
-              this.input.value = "";
-            })
-            .catch(() => {
-              alert("Error occured.");
-            });
+          this.props.store.dispatch(
+            handleAddGoal(this.input.value, () => (this.input.value = ""))
+          );
         };
         removeItem = goal => {
-          this.props.store.dispatch(removeGoalAction(goal.id));
-
-          return API.deleteGoal().catch(() => {
-            this.props.store.dispatch(addGoalAction(goal));
-            alert("An error occured. Please try again later.");
-          });
+          this.props.store.dispatch(handleRemoveGoal(goal));
         };
         render() {
           return (
